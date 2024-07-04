@@ -25,9 +25,6 @@ lint:
 test:
 	./gradlew test
 
-report:
-	./gradlew jacocoTestReport
-
 check-updates:
 	./gradlew dependencyUpdates
 
