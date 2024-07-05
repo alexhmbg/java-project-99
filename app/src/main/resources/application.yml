@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: app
+  jpa:
+    show-sql: true
+    hibernate:
+      format_sql: true
+  output:
+    ansi:
+      enabled: always
+  profiles:
+    active: dev
