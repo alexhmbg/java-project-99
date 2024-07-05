@@ -1,9 +1,9 @@
-FROM gradle:8.8.0-jdk17
+FROM gradle:8.5-jdk21
 
 WORKDIR /app
 
 COPY /app .
 
-RUN gradle installDist
+RUN gradle installDist --info
 
 CMD ./build/install/app/bin/app
