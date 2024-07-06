@@ -28,6 +28,10 @@ lint:
 test:
 	make -C app test
 
+report:
+	make -C app jacocoTestReport
+
+
 check-updates:
 	make -C app check-updates
 
