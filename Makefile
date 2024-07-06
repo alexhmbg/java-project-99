@@ -29,7 +29,7 @@ test:
 	make -C app test
 
 report:
-	make -C app jacocoTestReport
+	make -C app report
 
 
 check-updates:
