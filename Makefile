@@ -31,7 +31,6 @@ test:
 report:
 	make -C app report
 
-
 check-updates:
 	make -C app check-updates
 

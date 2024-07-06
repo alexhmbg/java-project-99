@@ -32,6 +32,9 @@ dependencies {
 	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
 	implementation("net.datafaker:datafaker:2.0.1")
 	implementation("org.instancio:instancio-junit:3.3.0")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+
 
 	annotationProcessor ("org.projectlombok:lombok:1.18.34")
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
@@ -44,6 +47,7 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("net.javacrumbs.json-unit:json-unit-assertj:3.2.2")
+
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testCompileOnly ("org.projectlombok:lombok:1.18.34")
 	testAnnotationProcessor ("org.projectlombok:lombok:1.18.34")

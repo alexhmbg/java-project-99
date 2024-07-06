@@ -1,4 +1,4 @@
-package hexlet.code.app.contoller;
+package hexlet.code.app.contoller.api;
 
 import hexlet.code.app.dto.UserCreateDTO;
 import hexlet.code.app.dto.UserDTO;
@@ -9,6 +9,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,12 +25,14 @@ public class UserController {
     private UserMapper userMapper;
 
     @GetMapping()
-    public List<UserDTO> index() {
+    ResponseEntity<List<UserDTO>> index() {
         var users = userRepository.findAll();
-
-        return users.stream()
+        var result = users.stream()
                 .map(userMapper::map)
                 .toList();
+        return ResponseEntity.ok()
+                .header("X-Total-Count", String.valueOf(users.size()))
+                .body(result);
     }
 
     @GetMapping("/{id}")
@@ -39,6 +42,7 @@ public class UserController {
 
         return userMapper.map(user);
     }
+
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
