@@ -34,7 +34,8 @@ dependencies {
 	implementation("org.instancio:instancio-junit:3.3.0")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
-
+	implementation("org.slf4j:slf4j-api:2.0.13")
+	implementation ("ch.qos.logback:logback-classic:1.4.12")
 
 	annotationProcessor ("org.projectlombok:lombok:1.18.34")
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
