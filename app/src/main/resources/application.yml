@@ -1,20 +1,23 @@
 spring:
-  application:
-    name: app
   jpa:
+    generate-ddl: true
     show-sql: true
+    open-in-view: false
+    output:
+      ansi:
+        enabled: always
+    jpa:
+      show-sql: true
     hibernate:
       format_sql: true
       ddl-auto: update
-  output:
-    ansi:
-      enabled: always
   profiles:
     active: dev
+
+logging:
+  level:
+    root: debug
+
 rsa:
   private-key: classpath:certs/private.pem
   public-key: classpath:certs/public.pem
-logging:
-  file: logs/application.log
-  level:
-    root: debug
