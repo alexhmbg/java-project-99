@@ -35,12 +35,20 @@ public class SecurityConfig {
     private CustomUserDetailsService userService;
 
     @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userService);
+        provider.setPasswordEncoder(passwordEncoder);
+        return provider;
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector)
             throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
+                        .requestMatchers("/api/login").permitAll()
                         .requestMatchers("/welcome").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -51,15 +59,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .build();
+        return http.getSharedObject(AuthenticationManagerBuilder.class).build();
     }
 
-    @Bean
-    public AuthenticationProvider daoAuthProvider(AuthenticationManagerBuilder auth) {
-        var provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userService);
-        provider.setPasswordEncoder(passwordEncoder);
-        return provider;
-    }
 }

@@ -1,4 +1,4 @@
-package hexlet.code.app.contoller.api;
+package hexlet.code.app.controller.api;
 
 import hexlet.code.app.dto.AuthRequest;
 import hexlet.code.app.util.JWTUtils;
@@ -19,14 +19,13 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @PostMapping("/login")
+    @PostMapping(path = "/login")
     public String create(@RequestBody AuthRequest authRequest) {
         var authentication = new UsernamePasswordAuthenticationToken(
                 authRequest.getUsername(), authRequest.getPassword());
 
         authenticationManager.authenticate(authentication);
 
-        var token = jwtUtils.generateToken(authRequest.getUsername());
-        return token;
+        return jwtUtils.generateToken(authRequest.getUsername());
     }
 }

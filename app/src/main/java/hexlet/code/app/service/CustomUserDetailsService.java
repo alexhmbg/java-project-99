@@ -1,5 +1,6 @@
 package hexlet.code.app.service;
 
+import hexlet.code.app.exception.ResourceNotFoundException;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
