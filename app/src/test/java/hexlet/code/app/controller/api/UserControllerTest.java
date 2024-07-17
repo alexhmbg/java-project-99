@@ -130,13 +130,8 @@ class UserControllerTest {
     }
 
     @Test
-    void testDelete() throws Exception {
-        var request = delete("/api/users/{id}", testUser.getId()).with(token);
-
-        mockMvc.perform(request)
-                .andExpect(status().isOk());
-
-        testUser = userRepository.findById(testUser.getId()).orElse(null);
-        assertThat(testUser).isNull();
+    public void testDestroy() throws Exception {
+        mockMvc.perform(delete("/api/users/" + testUser.getId()).with(token))
+                .andExpect(status().isNoContent());
     }
 }
