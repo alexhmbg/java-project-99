@@ -13,8 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -34,7 +32,7 @@ class CustomUserDetailsServiceTest {
     private UserRepository userRepository;
 
     @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    private CustomUserDetailsService userService;
 
     private User testUser;
 
@@ -47,13 +45,13 @@ class CustomUserDetailsServiceTest {
     @Test
     void loadUserByUsername() {
         userRepository.save(testUser);
-        var userDetails = customUserDetailsService.loadUserByUsername(testUser.getEmail());
+        var userDetails = userService.loadUserByUsername(testUser.getEmail());
         assertThat(testUser.getEmail()).isEqualTo(userDetails.getUsername());
     }
 
     @Test
     void createUser() {
-        customUserDetailsService.createUser(testUser);
+        userService.createUser(testUser);
         var user = userRepository.findByEmail(testUser.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         assertThat(testUser.getEmail()).isEqualTo(user.getEmail());

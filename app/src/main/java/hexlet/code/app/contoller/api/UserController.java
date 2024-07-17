@@ -46,7 +46,6 @@ public class UserController {
         return userMapper.map(user);
     }
 
-
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public UserDTO create(@Valid @RequestBody UserCreateDTO data) {

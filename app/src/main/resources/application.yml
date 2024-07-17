@@ -11,6 +11,10 @@ spring:
       enabled: always
   profiles:
     active: dev
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    enabled: true
 rsa:
   private-key: classpath:certs/private.pem
   public-key: classpath:certs/public.pem
