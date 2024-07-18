@@ -2,7 +2,7 @@ package hexlet.code.app.service;
 
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
-import hexlet.code.app.util.ModelGenerator;
+import hexlet.code.app.util.UserGenerator;
 import net.datafaker.Faker;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,7 @@ class CustomUserDetailsServiceTest {
     private Faker faker;
 
     @Autowired
-    private ModelGenerator modelGenerator;
+    private UserGenerator modelGenerator;
 
     @Autowired
     private UserRepository userRepository;

@@ -16,6 +16,7 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+
     @GetMapping(path = "/{id}")
     public UserDTO show(@PathVariable Long id) {
         return userService.show(id);

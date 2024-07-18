@@ -1,8 +1,9 @@
 package hexlet.code.app.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hexlet.code.app.model.User;
-import hexlet.code.app.repository.UserRepository;
+import hexlet.code.app.model.TaskStatus;
+import hexlet.code.app.repository.TaskStatusRepository;
+import hexlet.code.app.util.TaskStatusGenerator;
 import hexlet.code.app.util.UserGenerator;
 import net.datafaker.Faker;
 import org.instancio.Instancio;
@@ -12,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -24,13 +28,10 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class UserControllerTest {
+class TaskStatusControllerTest {
 
     @Autowired
     private WebApplicationContext wac;
@@ -42,17 +43,17 @@ class UserControllerTest {
     private Faker faker;
 
     @Autowired
-    private UserRepository userRepository;
+    private TaskStatusRepository taskStatusRepository;
 
     @Autowired
-    private UserGenerator userGenerator;
+    private TaskStatusGenerator modelGenerator;
 
     @Autowired
     private ObjectMapper om;
 
     private JwtRequestPostProcessor token;
 
-    private User testUser;
+    private TaskStatus testTaskStatus;
 
     @BeforeEach
     public void setUp() {
@@ -63,14 +64,14 @@ class UserControllerTest {
 
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
 
-        testUser = Instancio.of(userGenerator.getUserModel())
+        testTaskStatus = Instancio.of(modelGenerator.getTaskStatusModel())
                 .create();
-        userRepository.save(testUser);
+        taskStatusRepository.save(testTaskStatus);
     }
 
     @Test
     void testIndex() throws Exception {
-        var result = mockMvc.perform(get("/api/users").with(token))
+        var result = mockMvc.perform(get("/api/task_statuses").with(token))
                 .andExpect(status().isOk())
                 .andReturn();
         var body = result.getResponse().getContentAsString();
@@ -80,57 +81,56 @@ class UserControllerTest {
 
     @Test
     void testShow() throws Exception {
-        var request = get("/api/users/{id}", testUser.getId()).with(token);
+        var request = get("/api/task_statuses/{id}", testTaskStatus.getId()).with(token);
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
         var body = result.getResponse().getContentAsString();
 
         assertThatJson(body).and(
-                v -> v.node("email").isEqualTo(testUser.getEmail()),
-                v -> v.node("firstName").isEqualTo(testUser.getFirstName()),
-                v -> v.node("lastName").isEqualTo(testUser.getLastName())
+                v -> v.node("name").isEqualTo(testTaskStatus.getName()),
+                v -> v.node("slug").isEqualTo(testTaskStatus.getSlug())
         );
     }
 
     @Test
     void testCreate() throws Exception {
-        var data = Instancio.of(userGenerator.getUserModel())
+        var data = Instancio.of(modelGenerator.getTaskStatusModel())
                 .create();
 
-        var request = post("/api/users")
+        var request = post("/api/task_statuses")
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
 
-        var user = userRepository.findByEmail(data.getEmail()).get();
+        var taskStatus = taskStatusRepository.findByName(data.getName()).get();
 
-        assertNotNull(user);
-        assertThat(user.getFirstName()).isEqualTo(data.getFirstName());
-        assertThat(user.getLastName()).isEqualTo(data.getLastName());
+        assertNotNull(taskStatus);
+        assertThat(taskStatus.getName()).isEqualTo(data.getName());
+        assertThat(taskStatus.getSlug()).isEqualTo(data.getSlug());
     }
 
     @Test
     void testUpdate() throws Exception {
         var data = new HashMap<>();
-        data.put("firstName", "testNewName");
+        data.put("name", "slug");
 
-        var request = put("/api/users/{id}", testUser.getId()).with(token)
+        var request = put("/api/task_statuses/{id}", testTaskStatus.getId()).with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
 
         mockMvc.perform(request)
                 .andExpect(status().isOk());
 
-        testUser = userRepository.findById(testUser.getId()).get();
-        assertThat(testUser.getFirstName()).isEqualTo(data.get("firstName"));
+        testTaskStatus = taskStatusRepository.findById(testTaskStatus.getId()).get();
+        assertThat(testTaskStatus.getName()).isEqualTo(data.get("name"));
     }
 
     @Test
     public void testDestroy() throws Exception {
-        mockMvc.perform(delete("/api/users/" + testUser.getId()).with(token))
+        mockMvc.perform(delete("/api/task_statuses/" + testTaskStatus.getId()).with(token))
                 .andExpect(status().isNoContent());
     }
 }
